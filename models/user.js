@@ -1,16 +1,51 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+  });
 
-const User = sequelize.define("User", {
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-});
+  User.associate = (models) => {
+    // User has many Projects (as project manager)
+    User.hasMany(models.Project, {
+      foreignKey: 'projectManagerId',
+      as: 'managedProjects',
+    });
 
-module.exports = User;
+    // User has many DailyUpdates
+    User.hasMany(models.DailyUpdate, {
+      foreignKey: 'userId',
+      as: 'dailyUpdates',
+    });
+
+    // User is part of many Projects as team member (many-to-many)
+    User.belongsToMany(models.Project, {
+      through: 'ProjectMembers',
+      foreignKey: 'userId',  // Make sure this is the correct foreign key in the junction table
+      as: 'teamProjects',
+    });
+
+  };
+
+  return User;
+};
