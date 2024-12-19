@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const sequelize = require("./db");  // Import Sequelize instance
+const sequelize = require("./db");  
 const userRoutes= require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const dailyUpdateRoutes = require('./routes/dailyupdateRoutes');

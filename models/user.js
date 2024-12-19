@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     // User is part of many Projects as team member (many-to-many)
     User.belongsToMany(models.Project, {
       through: 'ProjectMembers',
-      foreignKey: 'userId',  // Make sure this is the correct foreign key in the junction table
+      foreignKey: 'userId', 
       as: 'teamProjects',
     });
 
