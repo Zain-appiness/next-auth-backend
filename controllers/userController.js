@@ -1,12 +1,14 @@
 const { User }= require('../models');
-const { Op }= require('sequelize');
+const { Op, where }= require('sequelize');
 const { Project } = require('../models');
 require("dotenv").config(); 
 const jwt = require("jsonwebtoken");
 
 async function login(req,res) {
   try {
+  
   const {email}= req.body;
+  console.log('email is :',email);
 
   const user= await User.findOne({
     where:{email},
@@ -78,19 +80,23 @@ async function createUser(req,res) {
       res.status(500).json({ message: 'Failed to create user', error });
     }
 }
-
-async function getAllUsers(req,res) {
-    try {
-        const users = await User.findAll({
-            attributes: ['id', 'email', 'name','isAdmin'],
-            order: [['name', 'ASC']]
-          });
-          res.json(users);
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        res.status(500).json({ message: 'Failed to fetch users', error });
-    }
+async function getAllUsers(req, res) {
+  const { page = 1, limit = 10 } = req.query; // Defaults to page 1, 10 users per page
+  try {
+    const { count, rows } = await User.findAndCountAll({
+      attributes: ['id', 'email', 'name', 'isAdmin'],
+      order: [['name', 'ASC']],
+      limit,
+      offset: (page - 1) * limit,
+    });
+    res.json({ total: count, users: rows });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Failed to fetch users', error });
+  }
 }
+
+
 async function getUserById(req, res) {
   const { id } = req.params;
 
@@ -98,21 +104,31 @@ async function getUserById(req, res) {
     const user = await User.findByPk(id, {
       attributes: ['id', 'email', 'name', 'isAdmin'],
       include: [
+        // Projects managed by the user
         {
           model: Project,
           as: 'managedProjects',
-          // through: {
-          //   attributes: [] // Exclude junction table attributes
-          // }, 
           include: [
-            { 
+            {
               model: User, 
               as: 'projectManager',
-              attributes: ['id', 'name', 'email']
-            }
-          ]
-        }
-      ]
+              attributes: ['id', 'name', 'email'],
+            },
+          ],
+        },
+        // Projects where the user is a team member
+        {
+          model: Project,
+          as: 'teamProjects',
+          include: [
+            {
+              model: User,
+              as: 'projectManager',
+              attributes: ['id', 'name', 'email'],
+            },
+          ],
+        },
+      ],
     });
 
     if (user) {
@@ -125,7 +141,7 @@ async function getUserById(req, res) {
     console.error('Error fetching user:', error);
     res.status(500).json({
       message: 'An error occurred while fetching the user.',
-      error: error.message
+      error: error.message,
     });
   }
 }
@@ -181,4 +197,33 @@ async function getUserProjects(req,res) {
     }
 }
 
-module.exports= {login, createUser,getAllUsers,getUserById,searchUsers,getUserProjects};
+async function getByemail(req, res) {
+  try {
+    const { email } = req.params;
+
+    const user = await User.findOne({
+      where: {
+        email: email,
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Send only specific fields in the response
+    const response = {
+      id: user.id,
+      name: user.name,
+      email: user.email
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error('Error fetching user projects:', error);
+    res.status(500).json({ message: 'Failed to fetch user projects', error });
+  }
+}
+
+
+module.exports= {login, createUser,getAllUsers,getUserById,searchUsers,getUserProjects,getByemail};

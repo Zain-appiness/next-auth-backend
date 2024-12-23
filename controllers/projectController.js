@@ -125,4 +125,80 @@ async function deleteProject(req,res) {
       }
 }
 
-module.exports ={createProject,getAllProjects,getProjectById,updateProject,deleteProject};
+async function getUserProjects(req, res) {
+  const { id } = req.params; // Get userId from the request parameters
+
+  try {
+    const user = await User.findByPk(id, {
+      include: [
+        // Projects where the user is a project manager
+        {
+          model: Project,
+          as: 'managedProjects', // alias for managed projects
+          include: [
+            {
+              model: User,
+              as: 'projectManager', // Fetch project manager details
+              attributes: ['id', 'name', 'email'], // You can adjust the attributes here
+            },
+            {
+              model: User,
+              as: 'teamMembers', // Fetch team members details
+              attributes: ['id', 'name', 'email'],
+            },
+          ],
+        },
+        // Projects where the user is a team member
+        {
+          model: Project,
+          as: 'teamProjects', // alias for team projects
+          include: [
+            {
+              model: User,
+              as: 'projectManager', // Fetch project manager details
+              attributes: ['id', 'name', 'email'],
+            },
+            {
+              model: User,
+              as: 'teamMembers', // Fetch team members details
+              attributes: ['id', 'name', 'email'],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (user) {
+      // Format the response for easier access to team members' names
+      const formattedUser = user.toJSON();
+
+      // Format managed projects and team projects to include team member names
+      formattedUser.managedProjects.forEach(project => {
+        project.teamMembers = project.teamMembers.map(member => ({
+          id: member.id,
+          name: member.name,
+        }));
+      });
+
+      formattedUser.teamProjects.forEach(project => {
+        project.teamMembers = project.teamMembers.map(member => ({
+          id: member.id,
+          name: member.name,
+        }));
+      });
+
+      return res.status(200).json(formattedUser);
+    }
+
+    return res.status(404).json({ message: 'User not found' });
+  } catch (error) {
+    console.error('Error fetching user projects:', error);
+    return res.status(500).json({
+      message: 'An error occurred while fetching user projects.',
+      error: error.message,
+    });
+  }
+}
+
+
+module.exports ={createProject,getAllProjects,getProjectById,updateProject,deleteProject, getUserProjects};
