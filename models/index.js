@@ -6,7 +6,7 @@ const db = {};
 
 db.User = require('./user')(sequelize, DataTypes);
 db.Project = require('./project')(sequelize, DataTypes);
-db.DailyUpdate = require('./dailyUpdate')(sequelize, DataTypes);
+db.DailyUpdate = require('./Dailyupdate')(sequelize, DataTypes);
 
 // Set up for associations between models
 db.User.associate(db);
