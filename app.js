@@ -6,12 +6,18 @@ const userRoutes= require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const dailyUpdateRoutes = require('./routes/dailyupdateRoutes');
 const app = express();
-
+require("dotenv").config(); 
 const db = require('./models');
 
 // Middlewares
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", process.env.FRONTEND_URL],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use('/api/user',userRoutes);
 app.use('/api/project',projectRoutes);
 app.use('/api/daily/update',dailyUpdateRoutes);
