@@ -9,7 +9,8 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
       require: true, // required for secure connections to Supabase
       rejectUnauthorized: false, // required for Supabase SSL
     }
-  }
+  },
+  dialectModule: pg
 });
 
 
