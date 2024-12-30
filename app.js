@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 // Corrected CORS Configuration
 app.use(
   cors({
-    origin: true,
+    origin: process.env.NEXT_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Allow credentials (cookies, headers, etc.)
   })
