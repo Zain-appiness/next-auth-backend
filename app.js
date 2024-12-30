@@ -17,8 +17,8 @@ app.use(
   cors({
     origin: (origin, callback) => {
       const allowedOrigins = [
-        process.env.NEXT_URL, 
-        "http://localhost:3000" // Allow localhost for development
+       "https://next-auth-frontend-olv3-qy6e8ip8x-zain-appiness-projects.vercel.app", 
+       "http://localhost:3000" // Allow localhost for development
       ];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true); // Allow the origin
