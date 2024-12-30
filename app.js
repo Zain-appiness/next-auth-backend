@@ -12,12 +12,19 @@ const db = require('./models');
 // Middlewares
 app.use(bodyParser.json());
 
-// Corrected CORS Configuration
+// Corrected CORS Configuration             
+const allowedOrigins = process.env.NEXT_URL;
 app.use(
   cors({
-    origin: process.env.NEXT_URL,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true, // Allow credentials (cookies, headers, etc.)
+    credentials: true,
   })
 );
 
