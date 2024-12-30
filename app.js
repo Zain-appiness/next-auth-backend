@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const sequelize = require("./db");  
-const userRoutes= require('./routes/userRoutes');
+const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const dailyUpdateRoutes = require('./routes/dailyupdateRoutes');
 const app = express();
@@ -11,19 +11,30 @@ const db = require('./models');
 
 // Middlewares
 app.use(bodyParser.json());
+
+// Corrected CORS Configuration
 app.use(
   cors({
-    origin: "*", // Replace this with your frontend URL
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        process.env.NEXT_URL, 
+        "http://localhost:3000" // Allow localhost for development
+      ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true); // Allow the origin
+      } else {
+        callback(new Error("Not allowed by CORS")); // Reject other origins
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Allow credentials (cookies, headers, etc.)
   })
 );
-app.use('/api/user',userRoutes);
-app.use('/api/project',projectRoutes);
-app.use('/api/daily/update',dailyUpdateRoutes);
 
-
-
+// Routes
+app.use('/api/user', userRoutes);
+app.use('/api/project', projectRoutes);
+app.use('/api/daily/update', dailyUpdateRoutes);
 
 // Test the database connection
 db.sequelize.authenticate()
@@ -34,8 +45,8 @@ db.sequelize.authenticate()
     console.error('Unable to connect to the database:', err);
   });
 
-  // Sync the models with the database
-  db.sequelize.sync({ alter: false }) // Use `force: true` to recreate tables if needed
+// Sync the models with the database
+db.sequelize.sync({ alter: false }) // Use `force: true` to recreate tables if needed
   .then(() => {
     console.log('Database and tables synced successfully!');
   })
