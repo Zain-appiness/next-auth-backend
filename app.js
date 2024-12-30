@@ -15,17 +15,7 @@ app.use(bodyParser.json());
 // Corrected CORS Configuration
 app.use(
   cors({
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-       "https://next-auth-frontend-olv3-67xkiq1bb-zain-appiness-projects.vercel.app", 
-       "http://localhost:3000" // Allow localhost for development
-      ];
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true); // Allow the origin
-      } else {
-        callback(new Error("Not allowed by CORS")); // Reject other origins
-      }
-    },
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Allow credentials (cookies, headers, etc.)
   })
