@@ -13,7 +13,7 @@ const db = require('./models');
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: ['http://localhost:3000',process.env.NEXT_URL], // Replace this with your frontend URL
+    origin: "*", // Replace this with your frontend URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Allow credentials (cookies, headers, etc.)
   })
