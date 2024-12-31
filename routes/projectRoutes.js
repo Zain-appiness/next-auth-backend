@@ -9,5 +9,5 @@ router.get('/', [authMiddleware, adminMiddleware], allowCors(getAllProjects));
 router.get('/:id', authMiddleware, getProjectById);
 router.put('/:id', [authMiddleware, adminMiddleware], allowCors(updateProject));
 router.delete('/:id', [authMiddleware, adminMiddleware], allowCors(deleteProject));
-router.get('/user/:id',[authMiddleware, adminMiddleware],allowCors(getUserProjects))
+router.get('/user/:id',authMiddleware,allowCors(getUserProjects))
 module.exports = router;
