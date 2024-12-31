@@ -2,7 +2,7 @@ const express= require('express');
 const router= express.Router();
 const {login,createUser,getAllUsers,getUserById,searchUsers,getUserProjects,getByemail}= require('../controllers/userController');
 const { authMiddleware,adminMiddleware } = require('../middleware/authMiddlerware');
-const allowCors = require('../middleware/corsMiddleware');
+const allowCors = require('../middleware/corsMiddlerware');
 
 // Public routes
 router.post('/signup', allowCors(createUser));
