@@ -14,10 +14,8 @@ app.use(bodyParser.json());
 
 // Corrected CORS Configuration             
 
-const allowedOrigins = process.env.NEXT_URL;
-
 app.use(cors({
-  origin: allowedOrigins, // Allow frontend app domain
+  origin: "*", // Allow frontend app domain
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
