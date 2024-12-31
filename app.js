@@ -13,23 +13,21 @@ const db = require('./models');
 app.use(bodyParser.json());
 
 // Corrected CORS Configuration             
-
-
-app.use(cors({
-  origin: (origin, callback) => {
-    const allowedOrigin = origin || '*';  // If origin is not present, allow all (can be modified)
-    
-    // Example: You can implement logic to restrict which origins you allow dynamically.
-    if (allowedOrigin === 'https://your-frontend-url.com' || allowedOrigin === 'https://another-trusted-frontend.com') {
-      callback(null, true);  // Allow this origin
-    } else {
-      callback(new Error('Not allowed by CORS'));  // Reject other origins
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,  // Allow credentials (cookies, etc.)
-}));
+const allowedOrigins = process.env.NEXT_URL;
+app.use(
+  
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  })
+)
 
 // Routes
 app.use('/api/user', userRoutes);
