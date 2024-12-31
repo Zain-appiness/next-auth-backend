@@ -14,11 +14,21 @@ app.use(bodyParser.json());
 
 // Corrected CORS Configuration             
 
+
 app.use(cors({
-  origin: "*", // Allow frontend app domain
+  origin: (origin, callback) => {
+    const allowedOrigin = origin || '*';  // If origin is not present, allow all (can be modified)
+    
+    // Example: You can implement logic to restrict which origins you allow dynamically.
+    if (allowedOrigin === 'https://your-frontend-url.com' || allowedOrigin === 'https://another-trusted-frontend.com') {
+      callback(null, true);  // Allow this origin
+    } else {
+      callback(new Error('Not allowed by CORS'));  // Reject other origins
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
+  credentials: true,  // Allow credentials (cookies, etc.)
 }));
 
 // Routes
