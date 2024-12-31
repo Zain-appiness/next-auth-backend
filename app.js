@@ -12,8 +12,7 @@ const db = require('./models');
 // Middlewares
 app.use(bodyParser.json());
 
-// Corrected CORS Configuration             
-const cors = require('cors');
+// Corrected CORS Configuration   
 
 app.use(cors({
   origin: (origin, callback) => {
