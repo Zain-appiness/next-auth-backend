@@ -5,14 +5,14 @@ const { authMiddleware,adminMiddleware } = require('../middleware/authMiddlerwar
 const allowCors = require('../middleware/corsMiddlerware');
 
 // Public routes
-router.post('/signup', createUser);
-router.post('/login',login);
-router.get('/email/:email',getByemail);
+router.post('/signup', allowCors(createUser));
+router.post('/login',allowCors(login));
+router.get('/email/:email',allowCors(getByemail));
 
 // Protected routes
-router.get('/', [authMiddleware, adminMiddleware], getAllUsers);
-router.get('/search', [authMiddleware, adminMiddleware], searchUsers);
-router.get('/:id', authMiddleware, getUserById);
-router.get('/:id/projects', authMiddleware, getUserProjects);
+router.get('/', [authMiddleware, adminMiddleware], allowCors(getAllUsers));
+router.get('/search', [authMiddleware, adminMiddleware], allowCors(searchUsers));
+router.get('/:id', authMiddleware, allowCors(getUserById));
+router.get('/:id/projects', authMiddleware, allowCors(getUserProjects));
 
 module.exports = router;

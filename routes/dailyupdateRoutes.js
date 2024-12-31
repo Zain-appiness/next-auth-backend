@@ -4,7 +4,7 @@ const {createDailyUpdate,getDailyUpdates} = require('../controllers/dailyControl
 const { authMiddleware } = require('../middleware/authMiddlerware');
 const allowCors = require('../middleware/corsMiddlerware');
 
-router.post('/:id', authMiddleware, createDailyUpdate);
-router.get('/project/:projectId', authMiddleware, getDailyUpdates);
+router.post('/:id', authMiddleware, allowCors(createDailyUpdate));
+router.get('/project/:projectId', authMiddleware, allowCors(getDailyUpdates));
 
 module.exports = router;

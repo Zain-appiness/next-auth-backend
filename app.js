@@ -8,26 +8,29 @@ const dailyUpdateRoutes = require('./routes/dailyupdateRoutes');
 const app = express();
 require("dotenv").config(); 
 const db = require('./models');
+const allowCors=require('./middleware/corsMiddlerware');
 
 // Middlewares
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(allowCors); 
 
 // Corrected CORS Configuration             
-const allowedOrigins = process.env.NEXT_URL;
-app.use(
+// const allowedOrigins = process.env.NEXT_URL;
+// app.use(
   
-  cors({
-    // origin: (origin, callback) => {
-    //   if (!origin || allowedOrigins.includes(origin)) {
-    //     callback(null, true);
-    //   } else {
-    //     callback(new Error("Not allowed by CORS"));
-    //   }
-    // },
-    // methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    // credentials: true,
-  })
-)
+//   cors({
+//     origin: (origin, callback) => {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//      credentials: true,
+//   })
+// )
 
 // Routes
 app.use('/api/user', userRoutes);
