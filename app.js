@@ -28,6 +28,23 @@ app.use(
   })
 );
 
+//HEADERS
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", allowedOrigins); // Replace with your frontend URL
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", "true"); // For cookies or Authorization headers
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
+  next();
+});
+
+
 // Routes
 app.use('/api/user', userRoutes);
 app.use('/api/project', projectRoutes);
