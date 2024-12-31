@@ -13,37 +13,15 @@ const db = require('./models');
 app.use(bodyParser.json());
 
 // Corrected CORS Configuration             
+
 const allowedOrigins = process.env.NEXT_URL;
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-  })
-);
 
-//HEADERS
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", allowedOrigins); // Replace with your frontend URL
-  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", "true"); // For cookies or Authorization headers
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return;
-  }
-  next();
-});
-
+app.use(cors({
+  origin: allowedOrigins, // Allow frontend app domain
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
 
 // Routes
 app.use('/api/user', userRoutes);
