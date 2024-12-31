@@ -13,9 +13,6 @@
         { "key": "Access-Control-Allow-Credentials", "value": "true" }
       ]
     }
-  ],
-  "env": {
-    "NEXT_URL": "@next_url" 
-  }
+  ]
 
 }
