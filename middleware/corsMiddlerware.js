@@ -1,6 +1,6 @@
 const allowCors = (fn) => async (req, res) => {
     // Get the 'Origin' from the request header dynamically
-    const allowedOrigin = req.headers.origin;
+    const allowedOrigin = 'https://next-auth-frontend-olv3.vercel.app';
   
     // Allow all origins dynamically based on the request's origin
     // You can also limit this to certain domains if needed

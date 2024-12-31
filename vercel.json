@@ -12,7 +12,7 @@
       "dest": "app.js",
       "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
       "headers": {
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "https://next-auth-frontend-olv3.vercel.app"
       }
     }
   ]

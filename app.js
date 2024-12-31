@@ -13,21 +13,26 @@ const db = require('./models');
 app.use(bodyParser.json());
 
 // Corrected CORS Configuration             
-const allowedOrigins = process.env.NEXT_URL;
-app.use(
-  
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-     credentials: true,
-  })
-)
+const cors = require('cors');
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow production domain and any preview domains from Vercel
+    if (
+      !origin || 
+      origin === 'https://next-auth-frontend-olv3.vercel.app' || 
+      origin.endsWith('.vercel.app')
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
+
 
 // Routes
 app.use('/api/user', userRoutes);
