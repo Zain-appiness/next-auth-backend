@@ -4,7 +4,7 @@ const { DailyUpdate}= require('../models');
 
 async function createDailyUpdate(req,res) {
     try {
-        const { projectId, taskDetails, startTime, endTime } = req.body;
+        const { projectId, taskDetails, startTime, endTime,date } = req.body;
         const userId = req.user.id; // From auth middleware
   
         const dailyUpdate = await DailyUpdate.create({
