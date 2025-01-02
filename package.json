@@ -13,12 +13,14 @@
   "dependencies": {
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
+    "date-fns": "^2.30.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
     "postgres": "^3.4.5",
+    "react-day-picker": "^9.5.0",
     "sequelize": "^6.37.5"
   }
 }
