@@ -13,7 +13,7 @@ async function createDailyUpdate(req,res) {
           taskDetails,
           startTime,
           endTime,
-          date: new Date()
+          date
         });
   
         const createdUpdate = await DailyUpdate.findByPk(dailyUpdate.id, {
